@@ -8,7 +8,7 @@ import Objetos.Problemas;
 import Objetos.miNave;
 
 public class Inicio {
-    String[] nombres_nave = new String[] { "NASA", "IBV", "OC", "Club Colombia", "Vianca", "Nombre personalizado" };
+    String[] nombres_nave = new String[] { "apolo 11", "starship", "voyager", "new horizons", "perseverance", "Nombre personalizado" };
     List<Planeta> misplaneta = Planeta.todosLosplanetas();
     List<Planeta> planetas_visitados = new ArrayList<>();
     List<Problemas> problemas = new ArrayList<>();
@@ -21,7 +21,7 @@ public class Inicio {
         
         miNave miNave = crearNave(entrada);
         do{
-        System.out.println("A que planeta gustas dirigirte: ");
+            System.out.println("A que planeta gustas dirigirte: ");
         for (int i = 0; i < misplaneta.size(); i++) {
             System.out.println(i + 1 + " " + misplaneta.get(i).getNombre());
         }
@@ -46,33 +46,44 @@ public class Inicio {
                     System.out.println("Daño de nave afectado: "+ problemaEncontrado.daño_nave);
                     miNave.vida_nave -= problemaEncontrado.daño_nave;
                     miNave.distancia_actual += problemaEncontrado.daño_distancia;
+                    case 0:
                         break;
                     default:
-                    System.out.println("Opcion incorrecta");
+                    System.out.println("ingresar una Opcion valida");
                         break;
+                }
+                while (terminar_programa) {
+                    
                 }
                 seleccion_problemas = new Random().nextInt(0, 4);
                 problemaEncontrado = problemas.get(seleccion_problemas);
             }
             if(i == valor_cuarto){
+                boolean validacion = false;
                 System.out.println(problemaEncontrado);
-                System.out.println(String.format("Deseas evitarlo? %s",opcion_seleccionar));
+                do {
+                    System.out.println(String.format("Deseas evitarlo? %s",opcion_seleccionar));
                 opcion_decidida = entrada.nextInt();
                 switch (opcion_decidida) {
                     case 1:
                         System.out.println("Has evitado " + problemaEncontrado);   
+                        validacion = true;
                         break;
                     case 2:
                     System.out.println("Daño de nave afectado: "+ problemaEncontrado.daño_nave);
                     miNave.vida_nave -= problemaEncontrado.daño_nave;
                     miNave.distancia_actual += problemaEncontrado.daño_distancia;
+                    validacion = true;
                         break;
                     default:
                     System.out.println("Opcion incorrecta");
                         break;
                 }
+                    
+                } while (!validacion);
+                
             }
-            miNave.movimiento();
+            miNave.movimiento(); 
         }
         double destino_llegada = miNave.aterrizar(miplaneta.getNombre());
         planetas_visitados.add(miplaneta);
@@ -105,9 +116,9 @@ public class Inicio {
         for (int i = 0; i < nombres_nave.length; i++) {
             System.out.println(i + 1 + " " + nombres_nave[i]);
         }
-        System.out.println("Ingresa la opcion que gustas: ");
-        int opcion_escogida = entrada.nextInt() - 1;
-        entrada.nextLine();
+        int opcion_escogida = (int) validaciones(nombres_nave.length, "Ingresa la opcion que gustas: ",entrada);
+       
+   //     entrada.nextLine();
 
         String nombre_seleccionado;
 
@@ -122,5 +133,22 @@ public class Inicio {
         }
         return new miNave(nombre_seleccionado, 10000000000L, 100);
 
+    }
+    public Object validaciones(int ultimoDato, String pregunta, Scanner entrada){
+        
+        Object opcion = 0;
+        do{
+        System.out.println(pregunta);
+        opcion = entrada.nextInt();
+        if(opcion instanceof Integer){
+        if((int) opcion > 0 && (int) opcion <= ultimoDato){
+            
+            return opcion;
+        } 
+    }else {
+        System.out.println("Ese tipo de dato es incorrecto");
+    }
+        }while(true);
+        
     }
 }

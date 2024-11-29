@@ -1,6 +1,8 @@
 package Objetos;
+import java.util.InputMismatchException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Scanner;
 
 
 public class Planeta {
@@ -30,7 +32,6 @@ public class Planeta {
         this.oxigeno_necesario = oxigeno_necesario;
         this.tieneVida = tieneVida;
     }
-
     public static List<Planeta> todosLosplanetas() {
 
         List<Planeta> misplanetas = new LinkedList<>();
@@ -49,5 +50,40 @@ public class Planeta {
 
         
     }
+public class SistemaPlanetas {
+    public static void main(String[] args) {
+        Scanner entrada = new Scanner(System.in);
 
+        List<Planeta> misplanetas = todosLosplanetas();
+        Planeta planetaSeleccionado = null;
+        boolean opcionValida = false;
+
+        do {
+            System.out.println("Selecciona un planeta:");
+            for (int i = 0; i < misplanetas.size(); i++) {
+                System.out.printf("%d. %s\n", i + 1, misplanetas.get(i).getNombre());
+            }
+
+            try {
+                System.out.print("Introduce el número de tu elección: ");
+                int opcion = entrada.nextInt();
+
+                if (opcion >= 1 && opcion <= misplanetas.size()) {
+                    planetaSeleccionado = misplanetas.get(opcion - 1);
+                    opcionValida = true; 
+                    System.out.println("Has seleccionado: " + planetaSeleccionado.getNombre());
+                } else {
+                    System.out.println("Opción incorrecta. Por favor, selecciona un número entre 1 y " + misplanetas.size());
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Por favor, introduce un número válido.");
+                entrada.next(); 
+            }
+        } while (!opcionValida);
+
+        entrada.close();
+    }
+    
+
+}
 }
