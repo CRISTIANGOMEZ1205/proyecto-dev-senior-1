@@ -38,7 +38,7 @@ public class miNave{
 
     }
     public double aterrizar(String nombre_planeta){
-        System.out.println(nombre_nave +" acaba de aterrizar en " +nombre_planeta +" y esta es su distancia total recorrida: "+ distancia_actual );
+        System.out.println(nombre_nave +" acaba de aterrizar en " +nombre_planeta +" y esta es su distancia total recorrida: "+ distancia_actual + " Km");
         return distancia_actual;
 
     }

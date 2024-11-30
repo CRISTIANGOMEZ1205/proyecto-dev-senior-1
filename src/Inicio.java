@@ -21,8 +21,15 @@ public class Inicio {
         
         miNave miNave = crearNave(entrada);
         do{
-          
-        int planeta_seleccionado = entrada.nextInt() - 1;
+        
+            int planeta_seleccionado = (int)  validaciones(misplaneta.size(),"A que planeta gustas dirigirte: ",entrada,
+            ()->{
+                System.out.println("*Planetas:");
+                for (int i = 0; i < misplaneta.size(); i++) {
+                    System.out.println(i + 1 + " " + misplaneta.get(i).getNombre());
+                }
+            }) -1;
+        
         Planeta miplaneta = misplaneta.get(planeta_seleccionado);
         miNave.despegar(miplaneta.getNombre());
         int seleccion_problemas = new Random().nextInt(0, 4);
@@ -32,9 +39,9 @@ public class Inicio {
         int opcion_decidida = 0;
         for (int i = 0; i < miplaneta.getDistancia(); i++) {
             if(i == valor_medio){
-                System.out.println(problemaEncontrado);
-                System.out.println(String.format("Deseas evitarlo? %s",opcion_seleccionar));
-                opcion_decidida = entrada.nextInt();
+                System.out.println("Oh no!, te encontraste con "+problemaEncontrado);
+              
+                opcion_decidida =(int) validaciones(2, String.format("Deseas evitarlo? %s",opcion_seleccionar), entrada, null);
                 switch (opcion_decidida) {
                     case 1:
                     System.out.println("Has evitado " + problemaEncontrado);
@@ -43,11 +50,7 @@ public class Inicio {
                     System.out.println("Daño de nave afectado: "+ problemaEncontrado.daño_nave);
                     miNave.vida_nave -= problemaEncontrado.daño_nave;
                     miNave.distancia_actual += problemaEncontrado.daño_distancia;
-                    case 0:
-                        break;
-                    default:
-                    System.out.println("ingresar una Opcion valida");
-                        break;
+                    break;
                 }
                 while (terminar_programa) {
                     
@@ -57,10 +60,10 @@ public class Inicio {
             }
             if(i == valor_cuarto){
                 boolean validacion = false;
-                System.out.println(problemaEncontrado);
+                System.out.println("Oh no!, te encontraste con "+problemaEncontrado);
                 do {
-                    System.out.println(String.format("Deseas evitarlo? %s",opcion_seleccionar));
-                opcion_decidida = entrada.nextInt();
+           
+                opcion_decidida =(int) validaciones(2, String.format("Deseas evitarlo? %s",opcion_seleccionar), entrada, null);
                 switch (opcion_decidida) {
                     case 1:
                         System.out.println("Has evitado " + problemaEncontrado);   
@@ -72,9 +75,6 @@ public class Inicio {
                     miNave.distancia_actual += problemaEncontrado.daño_distancia;
                     validacion = true;
                         break;
-                    default:
-                    System.out.println("Opcion incorrecta");
-                        break;
                 }
                     
                 } while (!validacion);
@@ -82,30 +82,31 @@ public class Inicio {
             }
             miNave.movimiento(); 
         }
+        if(miNave.vida_nave <= 0.0){
+            System.out.println("Ohhhh, has perdido toda la vida... El viaje ha llegado a su fin");
+            mostrarPlanetasrecorridos();
+            break;
+        }
         double destino_llegada = miNave.aterrizar(miplaneta.getNombre());
         planetas_visitados.add(miplaneta);
         miNave.setDistancia_final(destino_llegada);
-        System.out.println(miNave.nombre_nave + " llego a su destino final: " + miNave.getDistancia_final());
+        System.out.println(miNave.nombre_nave + " llego a su destino final: " + miNave.getDistancia_final()+" Km");
         System.out.println("Y llego con " + miNave.combustible + " Combustible");
         System.out.println(miNave.nombre_nave + " llego con " + miNave.vida_nave + "% de vida");
         mostrarPlanetasrecorridos();
-        System.out.println(String.format("Quieres dirigirte a otro planeta? %s",opcion_seleccionar));
-        int salida = entrada.nextInt();
+        
+        int salida = (int) validaciones(2, String.format("Quieres dirigirte a otro planeta? %s",opcion_seleccionar), entrada, null);
         if(salida == 2){
             terminar_programa = true;
         }
         
+        
     }while(!terminar_programa);
     entrada.close();
+    System.out.println("Muchas gracias por participar en nuestro viaje espacial!!");
     System.exit(0);
     }
-    private void mostarPlanetas(){
-        System.out.println("A que planeta gustas dirigirte: ");
-        for (int i = 0; i < misplaneta.size(); i++) {
-            System.out.println(i + 1 + " " + misplaneta.get(i).getNombre());
-        }
-
-    }
+    
 
     private void mostrarPlanetasrecorridos(){
         System.out.println("Planetas recorridos: ");
@@ -117,10 +118,11 @@ public class Inicio {
     private miNave crearNave(Scanner entrada){
         System.out.println("Bienvenido al proyecto espacial!");
         System.out.println("Para iniciar, por favor ingresa el nombre de tú nave: ");
-        for (int i = 0; i < nombres_nave.length; i++) {
-             System.out.println(i + 1 + " " + nombres_nave[i]);
-        }
-        int opcion_escogida = (int) validaciones(nombres_nave.length, "Ingresa la opcion que gustas: ",entrada, ()->{mostarPlanetas();});
+        
+        int opcion_escogida = (int) validaciones(nombres_nave.length, "Ingresa la opcion que gustas: ",entrada, ()->{
+            for (int i = 0; i < nombres_nave.length; i++) {
+            System.out.println(i + 1 + " " + nombres_nave[i]);
+       }});
        
    //     entrada.nextLine();
 
@@ -142,19 +144,28 @@ public class Inicio {
         
         Object opcion = 0;
         do{
-        funcion.run();
+            if(funcion != null){funcion.run();}
         System.out.println(pregunta);
+    
+      if(entrada.hasNextInt()){
         opcion = entrada.nextInt();
+      }else{
+        opcion = entrada.next();
+      }
         if(opcion instanceof Integer){
         if((int) opcion > 0 && (int) opcion <= ultimoDato){
             
             return opcion;
+        }
+        else{
+            System.out.println("Esa opción es incorrecta");
         } 
     }else {
         System.out.println("Ese tipo de dato es incorrecto");
     }
         }while(true);
-        
+     
+
     }
 }
 
