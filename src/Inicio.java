@@ -21,10 +21,7 @@ public class Inicio {
         
         miNave miNave = crearNave(entrada);
         do{
-            System.out.println("A que planeta gustas dirigirte: ");
-        for (int i = 0; i < misplaneta.size(); i++) {
-            System.out.println(i + 1 + " " + misplaneta.get(i).getNombre());
-        }
+          
         int planeta_seleccionado = entrada.nextInt() - 1;
         Planeta miplaneta = misplaneta.get(planeta_seleccionado);
         miNave.despegar(miplaneta.getNombre());
@@ -102,6 +99,13 @@ public class Inicio {
     entrada.close();
     System.exit(0);
     }
+    private void mostarPlanetas(){
+        System.out.println("A que planeta gustas dirigirte: ");
+        for (int i = 0; i < misplaneta.size(); i++) {
+            System.out.println(i + 1 + " " + misplaneta.get(i).getNombre());
+        }
+
+    }
 
     private void mostrarPlanetasrecorridos(){
         System.out.println("Planetas recorridos: ");
@@ -114,9 +118,9 @@ public class Inicio {
         System.out.println("Bienvenido al proyecto espacial!");
         System.out.println("Para iniciar, por favor ingresa el nombre de tú nave: ");
         for (int i = 0; i < nombres_nave.length; i++) {
-            System.out.println(i + 1 + " " + nombres_nave[i]);
+             System.out.println(i + 1 + " " + nombres_nave[i]);
         }
-        int opcion_escogida = (int) validaciones(nombres_nave.length, "Ingresa la opcion que gustas: ",entrada);
+        int opcion_escogida = (int) validaciones(nombres_nave.length, "Ingresa la opcion que gustas: ",entrada, ()->{mostarPlanetas();});
        
    //     entrada.nextLine();
 
@@ -134,10 +138,11 @@ public class Inicio {
         return new miNave(nombre_seleccionado, 10000000000L, 100);
 
     }
-    public Object validaciones(int ultimoDato, String pregunta, Scanner entrada){
+    public Object validaciones(int ultimoDato, String pregunta, Scanner entrada, Runnable funcion){
         
         Object opcion = 0;
         do{
+        funcion.run();
         System.out.println(pregunta);
         opcion = entrada.nextInt();
         if(opcion instanceof Integer){
